@@ -1,6 +1,8 @@
 {% extends "basic/layout.html" %}
 {% set script_files = script_files + ['_static/bootstrap.js'] %}
-{% set css_files = ['_static/bootstrap.css', '_static/bootstrap-sphinx.css'] + css_files %}
+{% set css_files = ['_static/bootstrap.css',
+                    '_static/bootstrap-responsive.css',
+                    '_static/bootstrap-sphinx.css'] + css_files %}
 
 {# Sidebar: Rework into our Boostrap nav section. #}
 {% macro navBar() %}
@@ -31,6 +33,10 @@
     </div>
   </div>
 {% endmacro %}
+
+{%- macro navigation() %}
+  {% include "globalnav.html" %}
+{%- endmacro %}
 
 {%- block extrahead %}
 <script type="text/javascript">
@@ -71,8 +77,15 @@
     console.log("HERE");
     findA($ul);
   };
-
+  
   $(document).ready(function () {
+    // Add styling to navigation
+    var nav = $('div.navigation ul');
+    nav.attr('class', 'nav nav-list');
+    var li = $('li:first-child', nav).get(0);
+    $(li).before('<li class="nav-header">Navigation</li>' +
+                 '<li class="divider"></li>');
+    
     // Add styling, structure to TOC's.
     $(".dropdown-menu").each(function () {
       $(this).find("ul").each(function (index, item){
@@ -105,7 +118,14 @@
 
 {%- block content %}
 <div class="container">
-   {% block body %} {% endblock %}
+  <div class="row">
+    <div class="span4">
+      {{ navigation() }}
+    </div>
+    <div class="span8">
+      {% block body %} {% endblock %}
+    </div>
+  </div>
 </div>
 {%- endblock %}
 
